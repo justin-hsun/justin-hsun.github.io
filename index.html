@@ -1,155 +1,132 @@
+<!DOCTYPE html>
 <html>
 <head>
-<title><?php print(encode_output($bio['name'])); ?></title>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<?php
-if (isset($_GET['contained']) && $_GET['contained'] == 1) {
-?>
-<style type="text/css" media="screen">
-<?php
-	print($css_screen);
-?>
-</style>
-<style type="text/css" media="print">
-<?php
-	print($css_print);
-?>
-</style>
-<script type="text/javascript">
-<?php
-	print($js);
-?>
-</script>
-<?php
+
+<title>Name</title>
+
+<style type="text/css">
+html {
+    background: white;
+    color: black;
+    font: 14px 'Helvetica Neue', Arial, sans-serif;
 }
-else {
-?>
-<style type="text/css" media="screen">
-	@import url(http://<?php print($_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']); ?>?output=css_screen);
-</style>
-<link rel="stylesheet" type="text/css" media="print" href="http://<?php print($_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']); ?>?output=css_print" />
-<script type="text/javascript" src="http://<?php print($_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']); ?>?output=js"></script>
-<?php
+body {
+    margin: 2em auto;
+    max-width: 760px;
+    width: 65%;
 }
-?>
+section {
+    clear: both;
+    margin-top: 3em;
+}
+li {
+    list-style-type: disc;
+}
+section > ul > li,
+header > ul > li {
+    list-style-type: none;
+    margin-bottom: .5em;
+}
+.headline-name {
+    border-bottom: 1px solid black;
+    padding-bottom: .5em;
+}
+.contact-column {
+    float: left;
+    padding: 0 1px;
+}
+a,
+a:link,
+a:visited {
+    border-bottom: 1px dotted rgb(0, 120, 180);
+    color: rgb(0, 120, 180);
+    padding: .2em .1em;
+    text-decoration: none;
+}
+a:focus,
+a:hover,
+a:active {
+    background-color: rgb(255, 245, 0);
+    border-bottom: 1px solid rgb(0, 120, 180);
+    color: rgb(0, 120, 180);
+}
+@media (min-width: 992px) {
+    .contact-column {
+        margin-left: 1em;
+    }
+    .contact-column.right {
+        float: right;
+    }
+}
+@media (max-width: 776px) {
+    ul {
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+@media print {
+    html {
+        color: black;
+        font-size: 12px;
+    }
+    body {
+        margin: 1.5em;
+        width: 90%;
+    }
+    section {
+        margin-top: 1em;
+    }
+    a,
+    a:link,
+    a:visited {
+        border: none;
+        color: black;
+    }
+}
+</style>
+
 </head>
-
 <body>
-
-<h1><?php print(encode_output($bio['name'])); ?></h1>
-
-<p id="bio_left">
-<?php
-if ($prefs['show_phone'] == 1) {
-	print(encode_output($bio['phone']).'<br />');
-}
-if ($prefs['show_email'] == 1) {
-?>
-	<script type="text/javascript">email();</script>
-<?php
-}
-?>
-</p>
-<p id="bio_right">
-<?php
-if ($prefs['show_address'] == 1) {
-	print(encode_output($bio['address']).'<br />'
-	     .encode_output($bio['city']).', '
-	     .encode_output($bio['state']).' '
-	     .encode_output($bio['zip'])
-	     );
-}
-?>
-</p>
-
-<h2>OBJECTIVE</h2>
-<p class="data"><?php print(encode_output($data['objective'])); ?></p>
-
-<h2>EXPERIENCE</h2>
-<?php
-foreach ($data['jobs'] as $job) { 
-	if ($job['show'] == 1) {
-		if (!empty($job['employer_link'])) {
-			$link = array(
-				'<a href="'.$job['employer_link'].'">'
-				,'</a>'
-			);
-		}
-		else {
-			$link = array('','');
-		}
-?>
-<div class="job">
-	<p class="date"><?php print(encode_output($job['period'])); ?></p>
-	<div class="job_data">
-		<h3><?php print($link[0].encode_output($job['employer']).$link[1]); ?></h3>
-<?php
-		if (!empty($job['location'])) {
-?>
-		<p class="location"><?php print(encode_output($job['location'])); ?></p>
-<?php
-		}
-		else {
-?>
-		<p class="location">&nbsp;</p>
-<?php
-		}
-		if (!empty($job['employer_info'])) {
-?>
-		<p class="company"><?php print(encode_output($job['employer_info'])); ?></p>
-<?php
-		}
-		foreach ($job['positions'] as $title => $position) {
-?>
-		<p class="position"><?php print(encode_output($title)); ?></p>
-		<ul>
-<?php
-			foreach ($position as $responsibility) {
-				print("			<li>".encode_output($responsibility)."</li>\n");
-			}
-?>
+	<header>
+		<h2>Name</h2>
+		<ul id="header-left" title="mail and phone">
+      <li>Address</li>
+			<li>City, State 55555</li>
+			<li>Phone</li>
 		</ul>
-		&nbsp;
-<?php
-		}
-?>
-	</div>
-</div>
-
-<?php
-	}
-}
-?>
-<h2>SKILLS, TECHNOLOGIES &amp; PROJECTS</h2>
-<ul>
-<?php
-foreach ($data['skills_technologies_projects'] as $temp) {
-	print("	<li>".encode_output($temp)."</li>\n");
-}
-?>
-</ul>
-
-<h2>EDUCATION &amp; INTERESTS</h2>
-<ul>
-<?php
-foreach ($data['education_interests'] as $temp) {
-	print("	<li>".encode_output($temp)."</li>\n");
-}
-?>
-</ul>
-
-<p id="references">References available upon request.</p>
-
-<p id="meta">
-<?php
-if (empty($_GET['contained']) || $_GET['contained'] != 1) {
-?>
-	<span id="versions"><a href="<?php print($_SERVER['PHP_SELF']); ?>">HTML version</a> | <a href="<?php print($_SERVER['PHP_SELF'].'?output=html&amp;contained=1'); ?>">E-mailable HTML version</a> | <a href="<?php print($_SERVER['PHP_SELF'].'?output=text'); ?>">Plain Text (.txt) version</a>.</span>
-<?php
-}
-?>
-	<span id="valid">Valid <a href="http://validator.w3.org/check/referer">XHTML 1.1</a> / <a href="http://jigsaw.w3.org/css-validator/check/referer">CSS 2.0</a></span>
-</p>
-
+		<ul id="header-right" title="web">
+			<li>Email</li>
+			<li>Web</li>
+			<li>LinkedIn</li>
+		</ul>
+	</header>
+	<section id="education"><h3>Education</h3>
+		<ul title="education">
+		<li>
+			<h4>Degree, Where, When</h4>
+        		<ul>
+        			<li>Stuff about your degree</li>
+       		</ul>
+       	</li>
+		</ul>
+	</section>
+	<section id="skills"><h3>Skills</h3>
+		<ul title="skills">
+			<li>Skill 1</li>
+      <li>Skill 2</li>
+		</ul>
+	</section>
+	<section id="experience"><h3>Experience</h3>
+	<ul title="experience">
+		<li>
+			<h4>Job Title, Place, Time</h4>
+			<ul>
+				<li>Stuff you did</li>
+			</ul>
+		</li>
+	</ul>
+	</section>
 </body>
 </html>
